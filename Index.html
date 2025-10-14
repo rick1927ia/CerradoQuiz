@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz do Cerrado</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: 
+                linear-gradient(135deg, rgba(10,14,39,0.95) 0%, rgba(26,58,26,0.95) 100%), 
+                url('https://images.unsplash.com/photo-1602491453631-e2a5ad90a131?w=1200') center/cover fixed;
+            min-height: 100vh; 
+            padding: 20px;
+        }
+
+        /* Animações otimizadas */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #8fbc8f, #9acd9a);
+            border-radius: 15px; 
+            padding: 40px 30px; 
+            text-align: center; 
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.1);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        h1 { 
+            color: #1a3a1a; 
+            font-size: 2.8em; 
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0 rgba(255,255,255,0.2);
+        }
+
+        .subtitle { 
+            color: #2d4d2d; 
+            font-size: 1.2em; 
+            font-weight: 600;
+        }
+        
+        /* Telas */
+        .screen { 
+            background: rgba(26,58,26,0.92); 
+            padding: 35px 30px; 
+            border-radius: 15px; 
+            border: 2px solid rgba(143,188,143,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            text-align: center; 
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease-out;
+            backdrop-filter: blur(5px);
+        }
+
+        .entry-icon { 
+            font-size: 70px; 
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .input-field {
+            width: 100%; 
+            max-width: 320px; 
+            padding: 14px 18px; 
+            border-radius: 12px;
+            border: 2px solid rgba(143,188,143,0.4); 
+            background: rgba(40,75,40,0.7);
+            color: #fff; 
+            font-size: 1.1em; 
+            margin: 18px 0; 
+            text-align: center;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.6s ease-out 0.3s both;
+        }
+
+        .input-field:focus { 
+            outline: none; 
+            border-color: #8fbc8f;
+            box-shadow: 0 0 20px rgba(143,188,143,0.4);
+            transform: scale(1.02);
+        }
+        
+        /* Botões */
+        .btn {
+            background: linear-gradient(135deg, #8fbc8f, #9acd9a);
+            color: #1a3a1a; 
+            border: none; 
+            padding: 14px 32px; 
+            border-radius: 25px; 
+            font-size: 1.1em;
+            font-weight: 700; 
+            cursor: pointer; 
+            margin: 12px; 
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            animation: fadeIn 0.6s ease-out 0.4s both;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-small { 
+            padding: 10px 20px; 
+            font-size: 0.95em; 
+        }
+        
+        /* Quiz */
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3,1fr); 
+            gap: 12px; 
+            margin-bottom: 20px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .stat-box { 
+            background: rgba(26,58,26,0.85); 
+            padding: 18px; 
+            border-radius: 12px; 
+            text-align: center;
+            border: 1px solid rgba(143,188,143,0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-label { 
+            color: #8fbc8f; 
+            font-size: 0.85em; 
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value { 
+            color: #fff; 
+            font-size: 1.8em; 
+            font-weight: 800;
+        }
+        
+        .question-box { 
+            background: rgba(26,58,26,0.9); 
+            padding: 25px; 
+            border-radius: 15px; 
+            margin-bottom: 18px; 
+            text-align: left;
+            border: 2px solid rgba(143,188,143,0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .question-text { 
+            color: #fff; 
+            font-size: 1.2em; 
+            font-weight: 600;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .options { 
+            display: grid; 
+            gap: 10px; 
+        }
+
+        .option {
+            background: rgba(50, 90, 50, 0.7);
+            padding: 16px 18px; 
+            border-radius: 10px;
+            border: 2px solid rgba(143,188,143,0.3); 
+            cursor: pointer; 
+            color: #e8f5e8;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .option:hover {
+            background: rgba(143,188,143,0.2);
+            border-color: #9acd9a;
+            transform: translateX(5px);
+        }
+
+        .option.correct {
+            background: #4caf50;
+            color: #1a3a1a;
+            border-color: #4caf50;
+            font-weight: 700;
+        }
+
+        .option.incorrect {
+            background: #d32f2f;
+            color: #fff;
+            border-color: #d32f2f;
+        }
+        
+        /* Feedback */
+        .feedback {
+            padding: 16px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: 600;
+            font-size: 1.1em;
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        /* Resultado */
+        .score-card { 
+            background: linear-gradient(135deg, #8fbc8f, #9acd9a);
+            padding: 28px; 
+            border-radius: 15px; 
+            margin: 22px 0; 
+            animation: pulse 1s ease-out;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .score-value { 
+            font-size: 3.5em; 
+            color: #1a3a1a; 
+            font-weight: 900;
+        }
+        
+        /* Ranking */
+        .ranking-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 18px 0;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .ranking-table th { 
+            background: rgba(143,188,143,0.25);
+            color: #8fbc8f; 
+            padding: 14px 12px; 
+            text-align: left; 
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid rgba(143,188,143,0.3);
+        }
+
+        .ranking-table td { 
+            padding: 12px; 
+            border-bottom: 1px solid rgba(143,188,143,0.2); 
+            color: #fff;
+        }
+
+        .ranking-table tr:nth-child(1) { background: rgba(255,215,0,0.1); }
+        .ranking-table tr:nth-child(2) { background: rgba(192,192,192,0.1); }
+        .ranking-table tr:nth-child(3) { background: rgba(205,127,50,0.1); }
+
+        .ranking-table tr:hover {
+            background: rgba(143,188,143,0.1);
+        }
+
+        .json-buttons { 
+            display: none; 
+            justify-content: center; 
+            gap: 10px; 
+            margin-top: 20px; 
+            flex-wrap: wrap;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2em; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .json-buttons { flex-direction: column; align-items: center; }
+            .btn { padding: 12px 25px; margin: 8px; }
+            .screen { padding: 25px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐆 QUIZ DO CERRADO 🌿</h1>
+            <p class="subtitle">Teste seus conhecimentos sobre o bioma Cerrado!</p>
+        </div>
+
+        <!-- Tela Inicial -->
+        <div class="screen" id="entryScreen">
+            <div class="entry-icon">🌿</div>
+            <h2>Bem-vindo ao Quiz!</h2>
+            <p>Digite seu nome para começar:</p>
+            <input type="text" class="input-field" id="playerName" placeholder="Seu nome" maxlength="20">
+            <button class="btn" id="startBtn">🎯 Começar Quiz</button>
+            <button class="btn btn-small" id="adminBtn">🔧 Admin</button>
+        </div>
+
+        <!-- Tela do Quiz -->
+        <div id="quizScreen" style="display:none;">
+            <div class="stats-grid">
+                <div class="stat-box"><div class="stat-label">Questões</div><div class="stat-value" id="totalQuestions">10</div></div>
+                <div class="stat-box"><div class="stat-label">Atual</div><div class="stat-value" id="currentQuestion">1</div></div>
+                <div class="stat-box"><div class="stat-label">Progresso</div><div class="stat-value"><span id="progressPercent">10</span>%</div></div>
+            </div>
+            <div id="quizContainer"></div>
+            <div id="feedback" class="feedback"></div>
+            <button class="btn" id="nextBtn" style="display:none;">➡️ Próxima</button>
+            <button class="btn" id="submitBtn" style="display:none;">🏁 Ver Resultado</button>
+        </div>
+
+        <!-- Tela de Resultado -->
+        <div class="screen" id="resultScreen" style="display:none;">
+            <div class="entry-icon">🏆</div>
+            <h2>Quiz Concluído! 🎉</h2>
+            <div class="score-card">
+                <div class="score-value" id="score"></div>
+                <div style="color:#1a3a1a; font-weight:700; margin-top:8px;">Pontuação Final</div>
+            </div>
+            <p id="message" style="color:#fff; margin:18px 0; font-size:1.1em; line-height:1.5;"></p>
+            <button class="btn" id="restartBtn">🔄 Jogar Novamente</button>
+            <button class="btn btn-small" id="adminBtnResult">🔧 Admin</button>
+        </div>
+
+        <!-- Tela de Ranking -->
+        <div class="screen" id="rankingScreen" style="display:none;">
+            <h3>🏆 Ranking</h3>
+            <table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Jogador</th>
+                        <th style="text-align:right;">Pontos</th>
+                    </tr>
+                </thead>
+                <tbody id="rankingBody"></tbody>
+            </table>
+            <div class="json-buttons" id="jsonButtons">
+                <button class="btn btn-small" id="exportBtn">📥 Exportar JSON</button>
+                <input type="file" id="importFile" style="display:none;" accept=".json">
+                <label for="importFile" class="btn btn-small">📤 Importar JSON</label>
+                <button class="btn btn-small" id="clearBtn">🗑️ Limpar</button>
+            </div>
+        </div>
+
+        <!-- Tela de Senha Admin -->
+        <div class="screen" id="passwordScreen" style="display:none;">
+            <h3>🔐 Acesso Admin</h3>
+            <p>Digite a senha:</p>
+            <input type="password" class="input-field" id="passwordInput" placeholder="Senha">
+            <button class="btn" id="verifyPasswordBtn">✅ Verificar</button>
+            <button class="btn btn-small" id="backBtn">↩️ Voltar</button>
+        </div>
+    </div>
+
+    <script>
+        // Configurações
+        const QUESTIONS = [
+            { question: "Qual a porcentagem do território brasileiro ocupada pelo Cerrado?", options: ["15%", "22%", "30%", "40%"], correct: 1 },
+            { question: "Quais são as duas estações bem definidas do Cerrado?", options: ["Primavera e outono", "Verão chuvoso e inverno seco", "Verão seco e inverno chuvoso", "Não há estações"], correct: 1 },
+            { question: "Qual é a característica principal do solo do Cerrado?", options: ["Rico em nutrientes", "Ácido e pobre", "Neutro e fértil", "Arenoso"], correct: 1 },
+            { question: "Quantas espécies de plantas existem no Cerrado?", options: ["5 mil", "8 mil", "11 mil", "20 mil"], correct: 2 },
+            { question: "Qual NÃO é animal típico do Cerrado?", options: ["Lobo-guará", "Tamanduá", "Pinguim", "Onça"], correct: 2 },
+            { question: "Temperatura média anual?", options: ["10-15°C", "15-20°C", "20-27°C", "30-35°C"], correct: 2 },
+            { question: "Fruto típico do Cerrado?", options: ["Açaí", "Pequi", "Cupuaçu", "Jabuticaba"], correct: 1 },
+            { question: "Povos tradicionais?", options: ["Apenas indígenas", "Quilombolas, indígenas...", "Apenas agricultores", "Não há"], correct: 1 },
+            { question: "Principal problema ambiental?", options: ["Excesso de chuvas", "Desmatamento", "Poluição", "Geleiras"], correct: 1 },
+            { question: "Vegetação conhecida como?", options: ["Amazônia", "Savana brasileira", "Mata Atlântica", "Caatinga"], correct: 1 }
+        ];
+        
+        const ADMIN_PASSWORD = "1927";
+
+        // Estado do jogo
+        let currentQ = 0, score = 0, answered = false, playerName = "", ranking = [], shuffledQuestions = [];
+
+        // Funções principais
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function prepareQuestions() {
+            return QUESTIONS.map(q => {
+                const indices = shuffleArray([0,1,2,3]);
+                return {
+                    ...q,
+                    options: indices.map(i => q.options[i]),
+                    correct: indices.indexOf(q.correct)
+                };
+            });
+        }
+
+        function loadRanking() {
+            try {
+                const stored = localStorage.getItem('cerradoQuizRanking');
+                if (stored) {
+                    ranking = JSON.parse(stored);
+                    // Garantir que o ranking seja um array válido
+                    if (!Array.isArray(ranking)) ranking = [];
+                } else {
+                    ranking = [];
+                }
+            } catch (e) {
+                console.error('Erro ao carregar ranking:', e);
+                ranking = [];
+            }
+        }
+
+        function saveRanking() {
+            try {
+                localStorage.setItem('cerradoQuizRanking', JSON.stringify(ranking));
+            } catch (e) {
+                console.error('Erro ao salvar ranking:', e);
+            }
+        }
+
+        function addToRanking(name, score) {
+            ranking.push({ 
+                name: name.trim(), 
+                score: score,
+                date: new Date().toLocaleDateString('pt-BR'),
+                timestamp: Date.now()
+            });
+            
+            // Ordenar por pontuação (maior para menor) e depois por timestamp (mais recente primeiro)
+            ranking.sort((a, b) => {
+                if (b.score !== a.score) return b.score - a.score;
+                return b.timestamp - a.timestamp;
+            });
+            
+            // Manter apenas os 10 melhores
+            if (ranking.length > 10) {
+                ranking = ranking.slice(0, 10);
+            }
+            saveRanking();
+        }
+
+        // Funções de UI
+        function showScreen(screenId) {
+            // Esconder todas as telas
+            document.getElementById('entryScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('rankingScreen').style.display = 'none';
+            document.getElementById('passwordScreen').style.display = 'none';
+            
+            // Mostrar a tela solicitada
+            document.getElementById(screenId).style.display = 'block';
+            
+            // Se for a tela de ranking, atualizar a lista
+            if (screenId === 'rankingScreen') {
+                showRanking();
+            }
+        }
+
+        function startQuiz() {
+            playerName = document.getElementById('playerName').value.trim();
+            if (!playerName) {
+                alert("Digite seu nome para começar!");
+                return;
+            }
+            
+            shuffledQuestions = prepareQuestions();
+            currentQ = 0;
+            score = 0;
+            showScreen('quizScreen');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            answered = false;
+            const q = shuffledQuestions[currentQ];
+            
+            document.getElementById('quizContainer').innerHTML = `
+                <div class="question-box">
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">
+                        ${q.options.map((opt, i) => 
+                            `<div class="option" onclick="selectOption(${i})">${opt}</div>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+            
+            const progress = ((currentQ + 1) / shuffledQuestions.length * 100);
+            document.getElementById('currentQuestion').textContent = currentQ + 1;
+            document.getElementById('progressPercent').textContent = Math.round(progress);
+            
+            // Resetar botões e feedback
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('feedback').style.display = 'none';
+        }
+
+        function selectOption(index) {
+            if (answered) return;
+            answered = true;
+            
+            const options = document.querySelectorAll('.option');
+            const correct = shuffledQuestions[currentQ].correct;
+            const feedback = document.getElementById('feedback');
+            
+            // Aplicar classes de correção
+            options.forEach((opt, i) => {
+                if (i === correct) {
+                    opt.classList.add('correct');
+                }
+                if (i === index && i !== correct) {
+                    opt.classList.add('incorrect');
+                }
+                opt.style.pointerEvents = 'none'; // Desativar clicks
+            });
+
+            // Mostrar feedback
+            if (index === correct) {
+                score++;
+                feedback.textContent = '✅ Resposta Correta!';
+                feedback.style.background = 'rgba(76,175,80,0.2)';
+                feedback.style.color = '#4caf50';
+            } else {
+                feedback.textContent = '❌ Resposta Incorreta';
+                feedback.style.background = 'rgba(211,47,47,0.2)';
+                feedback.style.color = '#f44336';
+            }
+            feedback.style.display = 'block';
+
+            // Mostrar botão apropriado
+            if (currentQ < shuffledQuestions.length - 1) {
+                document.getElementById('nextBtn').style.display = 'block';
+            } else {
+                document.getElementById('submitBtn').style.display = 'block';
+            }
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            loadQuestion();
+        }
+
+        function showResult() {
+            const percentage = (score / shuffledQuestions.length * 100);
+            document.getElementById('score').textContent = `${score}/${shuffledQuestions.length}`;
+            
+            let message = '';
+            if (percentage >= 90) message = '🏆 EXCELENTE! Você é um expert do Cerrado!';
+            else if (percentage >= 70) message = '👏 MUITO BOM! Você conhece bem o Cerrado!';
+            else if (percentage >= 50) message = '👍 BOM TRABALHO! Continue aprendendo!';
+            else message = '💪 VAMOS LÁ! Tente novamente!';
+            
+            document.getElementById('message').textContent = message;
+            addToRanking(playerName, score);
+            showScreen('resultScreen');
+        }
+
+        function showRanking() {
+            const tbody = document.getElementById('rankingBody');
+            
+            if (!ranking || ranking.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#8fbc8f; padding:20px;">Nenhum jogador no ranking</td></tr>';
+                return;
+            }
+            
+            let html = '';
+            ranking.forEach((player, index) => {
+                const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}`;
+                html += `
+                    <tr>
+                        <td style="font-weight:700; color:#8fbc8f;">${medal}</td>
+                        <td>${player.name}</td>
+                        <td style="text-align:right; font-weight:600;">${player.score}/${QUESTIONS.length}</td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+
+        // Funções Admin
+        function showAdminScreen() {
+            document.getElementById('passwordInput').value = '';
+            showScreen('passwordScreen');
+        }
+
+        function verifyPassword() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('jsonButtons').style.display = 'flex';
+                showScreen('rankingScreen');
+            } else {
+                alert('Senha incorreta!');
+            }
+        }
+
+        function exportRanking() {
+            const dataStr = JSON.stringify(ranking, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'ranking_cerrado.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function importRanking(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (Array.isArray(imported)) {
+                        ranking = imported.slice(0, 10);
+                        saveRanking();
+                        showRanking();
+                        alert('Ranking importado com sucesso!');
+                    } else {
+                        alert('Arquivo inválido!');
+                    }
+                } catch (error) {
+                    alert('Erro ao importar arquivo!');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function clearRanking() {
+            if (confirm('Tem certeza que deseja limpar todo o ranking?')) {
+                ranking = [];
+                saveRanking();
+                showRanking();
+                alert('Ranking limpo!');
+            }
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRanking();
+            
+            // Event listeners principais
+            document.getElementById('startBtn').addEventListener('click', startQuiz);
+            document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+            document.getElementById('submitBtn').addEventListener('click', showResult);
+            document.getElementById('restartBtn').addEventListener('click', startQuiz);
+            
+            // Admin
+            document.getElementById('adminBtn').addEventListener('click', showAdminScreen);
+            document.getElementById('adminBtnResult').addEventListener('click', showAdminScreen);
+            document.getElementById('verifyPasswordBtn').addEventListener('click', verifyPassword);
+            document.getElementById('backBtn').addEventListener('click', () => showScreen('entryScreen'));
+            
+            // Funções JSON
+            document.getElementById('exportBtn').addEventListener('click', exportRanking);
+            document.getElementById('clearBtn').addEventListener('click', clearRanking);
+            document.getElementById('importFile').addEventListener('change', function(e) {
+                if (e.target.files[0]) {
+                    importRanking(e.target.files[0]);
+                }
+                e.target.value = '';
+            });
+            
+            // Enter para ações
+            document.getElementById('playerName').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') startQuiz();
+            });
+            document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') verifyPassword();
+            });
+            
+            // Mostrar tela inicial
+            showScreen('entryScreen');
+        });
+    </script>
+</body>
+</html>
